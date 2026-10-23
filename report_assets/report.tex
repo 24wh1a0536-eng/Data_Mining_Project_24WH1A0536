@@ -1,0 +1,447 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\geometry{a4paper, top=0.75in, bottom=0.75in, left=0.75in, right=0.75in}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{hyperref}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!70!black,
+    citecolor=blue!70!black,
+    urlcolor=blue!70!black
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\footnotesize \textcolor{gray}{Data Mining Tool Activity | Diabetes Classification}}
+\rhead{\footnotesize \textcolor{gray}{Student: D. Tulasi Priya}}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\titleformat{\section}{\large\bfseries\color{blue!80!black}}{\thesection}{1em}{}[\titlerule]
+\titleformat{\subsection}{\normalsize\bfseries\color{black!90}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\small\bfseries\color{black!80}}{\thesubsubsection}{1em}{}
+\titlespacing*{\section}{0pt}{12pt plus 2pt minus 2pt}{6pt plus 1pt minus 1pt}
+\titlespacing*{\subsection}{0pt}{10pt plus 2pt minus 2pt}{4pt plus 1pt minus 1pt}
+\titlespacing*{\subsubsection}{0pt}{8pt plus 1pt minus 1pt}{3pt plus 1pt minus 1pt}
+\captionsetup{font=small,labelfont=bf,skip=5pt}
+
+\begin{document}
+
+% ------------------- TITLE PAGE -------------------
+\begin{titlepage}
+    \centering
+    \vspace*{0.3cm}
+    {\Huge \bfseries \color{blue!80!black} BVRIT HYDERABAD\\ \Large College of Engineering for Women \par}
+    \vspace{0.3cm}
+    {\large \textbf{Department of Computer Science and Engineering} \par}
+    \vspace{1.2cm}
+    \rule{\textwidth}{1.5pt} \par
+    \vspace{0.4cm}
+    {\LARGE \bfseries Diabetes Prediction Using Data Mining Algorithms in Weka \par}
+    \vspace{0.3cm}
+    \rule{\textwidth}{1.5pt} \par
+    \vspace{1.0cm}
+    {\large \textbf{A Comprehensive Tool Activity Report Submitted for} \par}
+    \vspace{0.2cm}
+    {\Large \textbf{Data Mining Laboratory / Weka Practical Activity} \par}
+    \vspace{1.8cm}
+    \begin{minipage}{0.48\textwidth}
+        \textbf{Submitted By:}\\[0.2cm]
+        \textbf{Student Name:} D. Tulasi Priya\\
+        \textbf{Roll Number:} 24WH1A0536\\
+        \textbf{Department:} CSE\\
+        \textbf{Year \& Sem:} 3rd Year / 1st Sem
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \begin{flushright}
+        \textbf{Institution Details:}\\[0.2cm]
+        \textbf{College:} BVRIT HYDERABAD\\
+        \textbf{Affiliation:} JNTUH\\
+        \textbf{Academic Year:} 2026--2027\\
+        \textbf{Tool Used:} Weka 3.8.7 \& Python
+        \end{flushright}
+    \end{minipage}
+    \vfill
+    {\small \textcolor{gray}{Date of Submission: October 2026 | Hyderabad, India} \par}
+\end{titlepage}
+
+\newpage
+\tableofcontents
+\newpage
+
+% ------------------- SECTION 1 -------------------
+\section{Abstract}
+This project explores the use of data mining classification algorithms to classify diabetes status using the Pima Diabetes dataset. The dataset contains 768 instances and 9 attributes, including eight clinical predictor attributes and one target class attribute. The target class has two values: \texttt{tested\_negative} and \texttt{tested\_positive}.
+
+The dataset was inspected and analyzed using Weka. Three classification algorithms---\textbf{J48}, \textbf{Naive Bayes}, and \textbf{RandomForest}---were evaluated using stratified 10-fold cross-validation. The recorded accuracies were \textbf{73.8281\%} for J48, \textbf{76.3021\%} for Naive Bayes, and \textbf{75.2604\%} for RandomForest. Among these models, Naive Bayes achieved the highest accuracy in this experiment.
+
+The work demonstrates a basic data mining workflow: loading an ARFF dataset, checking its attributes, applying classification algorithms, evaluating their results, and comparing their performance. The experiment is intended for academic learning and is not a medical diagnostic system.
+
+% ------------------- SECTION 2 -------------------
+\section{Problem Statement}
+\subsection{Formal Statement}
+The objective of this educational data mining activity is:
+\begin{quote}
+\textit{\textbf{To analyze the Pima Diabetes dataset and compare classification algorithms that predict whether a record belongs to the tested-negative or tested-positive class.}}
+\end{quote}
+
+\subsection{Objectives}
+\begin{enumerate}
+    \item Load and inspect the diabetes dataset in Weka.
+    \item Identify the predictor attributes and the target class.
+    \item Apply J48, Naive Bayes, and RandomForest classifiers.
+    \item Evaluate the classifiers using stratified 10-fold cross-validation.
+    \item Compare accuracy and class-level evaluation measures.
+\end{enumerate}
+
+\subsection{Educational Scope Disclaimer}
+This is an academic data mining experiment using a public dataset. Its outputs should not be interpreted as a diagnosis, medical advice, or a replacement for professional healthcare assessment.
+
+% ------------------- SECTION 3 -------------------
+\section{Dataset Description}
+\subsection{Dataset Overview}
+The project uses the Pima Diabetes dataset in ARFF format. The dataset contains 768 instances and 9 attributes. Eight attributes are predictors and the final attribute is the class label.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Dataset Summary}
+\label{tab:dataset}
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+\textbf{Property} & \textbf{Description} \\
+\midrule
+Dataset file & \texttt{diabetes.arff} \\
+Dataset type & Pima Diabetes dataset \\
+Number of instances & 768 \\
+Number of attributes & 9 \\
+Predictor attributes & 8 numeric attributes \\
+Target attribute & \texttt{class} \\
+Class values & \texttt{tested\_negative}, \texttt{tested\_positive} \\
+Data mining task & Binary classification \\
+Tool & Weka Explorer 3.8.7 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Attribute Description}
+The attribute names below describe the common Pima Diabetes ARFF structure used for this activity. Confirm the exact names in the loaded ARFF file if your copy uses different naming.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\caption{Attributes in the Pima Diabetes Dataset}
+\label{tab:attributes}
+\begin{tabularx}{\textwidth}{cllX}
+\toprule
+\textbf{\#} & \textbf{Attribute} & \textbf{Type} & \textbf{Description} \\
+\midrule
+1 & \texttt{preg} & Numeric & Number of times pregnant \\
+2 & \texttt{plas} & Numeric & Plasma glucose concentration \\
+3 & \texttt{pres} & Numeric & Diastolic blood pressure \\
+4 & \texttt{skin} & Numeric & Triceps skin-fold thickness \\
+5 & \texttt{insu} & Numeric & Two-hour serum insulin \\
+6 & \texttt{mass} & Numeric & Body mass index (BMI) \\
+7 & \texttt{pedi} & Numeric & Diabetes pedigree function \\
+8 & \texttt{age} & Numeric & Age in years \\
+9 & \texttt{class} & Nominal (2) & Target class: tested negative or tested positive \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Class Distribution}
+The recorded confusion matrices show 500 actual \texttt{tested\_negative} instances and 268 actual \texttt{tested\_positive} instances, for a total of 768. This distribution should be checked against the class distribution shown in Weka's Preprocess tab.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Class Distribution in the Evaluated Dataset}
+\label{tab:classdist}
+\begin{tabular}{lrr}
+\toprule
+\textbf{Class} & \textbf{Instances} & \textbf{Percentage} \\
+\midrule
+\texttt{tested\_negative} & 500 & 65.10\% \\
+\texttt{tested\_positive} & 268 & 34.90\% \\
+\midrule
+\textbf{Total} & \textbf{768} & \textbf{100.00\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ------------------- SECTION 4 -------------------
+\section{Data Preprocessing}
+\subsection{Dataset Inspection}
+The ARFF file was loaded in Weka Explorer through the \textbf{Preprocess} tab. The instance count, attribute count, attribute types, and class labels were inspected before classification.
+
+\subsection{Normalize and Standardize Filters}
+The recorded Weka relation string indicates that the Normalize filter followed by the Standardize filter was used in the evaluated workflow. Normalize commonly rescales numeric values to a specified range, while Standardize transforms numeric values based on their mean and standard deviation.
+
+\begin{itemize}
+    \item \textbf{Normalize:} Rescales numeric feature values to a range defined by the filter settings.
+    \item \textbf{Standardize:} Transforms numeric values so that they are centered around a mean of zero and scaled by their standard deviation.
+    \item \textbf{Class attribute:} The target class remains categorical and is used as the prediction target.
+\end{itemize}
+
+The relation string documents the filters associated with the Weka run. It should not be assumed that the original ARFF file was permanently rewritten unless a separately saved processed file was created.
+
+\subsection{Missing and Zero Values}
+The Pima Diabetes dataset is commonly inspected for zero values in measurements such as plasma glucose, blood pressure, skin thickness, insulin, and BMI. Some zero measurements may represent unavailable values rather than realistic measurements. In this activity, these values should be reported as observed in the dataset; they should not be replaced or imputed unless that preprocessing step was actually performed and documented.
+
+% ------------------- SECTION 5 -------------------
+\section{Methodology}
+The workflow followed for the data mining activity is summarized below:
+\begin{enumerate}
+    \item Open Weka Explorer.
+    \item Load \texttt{diabetes.arff} in the Preprocess tab.
+    \item Verify that the dataset contains 768 instances and 9 attributes.
+    \item Inspect the class attribute and its two class values.
+    \item Open the \textbf{Classify} tab and select 10-fold cross-validation.
+    \item Run J48 and record the classifier output.
+    \item Run Naive Bayes and record the classifier output.
+    \item Run RandomForest and record the classifier output.
+    \item Compare accuracy, class-level metrics, and confusion matrices.
+    \item Identify the best-performing algorithm among the three recorded runs.
+\end{enumerate}
+
+% ------------------- SECTION 6 -------------------
+\section{Experimental Setup}
+The following settings and dataset details were recorded for the Weka experiment.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Experimental Configuration}
+\label{tab:setup}
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+\textbf{Setting} & \textbf{Value} \\
+\midrule
+Data mining tool & Weka Explorer 3.8.7 \\
+Input file & \texttt{diabetes.arff} \\
+Instances & 768 \\
+Attributes & 9 \\
+Target class & \texttt{class} \\
+Evaluation method & Stratified 10-fold cross-validation \\
+J48 configuration & \texttt{-C 0.25 -M 2} \\
+Naive Bayes & Weka default configuration as recorded \\
+RandomForest configuration & \texttt{-P 100 -I 100 -num-slots 1 -K 0 -M 1.0 -V 0.001 -S 1} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ------------------- SECTION 7 -------------------
+\section{Algorithm Descriptions}
+\subsection{J48 Decision Tree}
+J48 is Weka's implementation of the C4.5 decision tree algorithm. It creates a tree by selecting attributes that help separate the classes. The resulting model can be inspected as a set of decision rules and is relatively easy to explain.
+
+\subsection{Naive Bayes}
+Naive Bayes is a probabilistic classifier based on Bayes' theorem. It estimates the probability that an instance belongs to each class using the predictor attributes. Its simplifying assumption is that the predictors are conditionally independent given the class.
+
+\subsection{RandomForest}
+RandomForest builds a collection of decision trees using randomized training samples and feature selection. The trees' predictions are combined to produce the final class. This ensemble approach can improve robustness compared with a single tree.
+
+\subsection{Reason for Comparing the Algorithms}
+The three algorithms represent different approaches to classification: a rule-based tree, a probabilistic model, and an ensemble of trees. Comparing them helps demonstrate how different learning methods behave on the same dataset.
+
+% ------------------- SECTION 8 -------------------
+\section{Results and Comparison}
+\subsection{Comparative Performance Summary}
+Table~\ref{tab:comparison} presents the recorded Weka cross-validation results.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Performance Comparison of the Three Weka Classifiers}
+\label{tab:comparison}
+\begin{tabularx}{\textwidth}{lrrrr}
+\toprule
+\textbf{Algorithm} & \textbf{Correct} & \textbf{Incorrect} & \textbf{Accuracy} & \textbf{Error Rate} \\
+\midrule
+J48 & 567 & 201 & 73.8281\% & 26.1719\% \\
+Naive Bayes & 586 & 182 & \textbf{76.3021\%} & \textbf{23.6979\%} \\
+RandomForest & 578 & 190 & 75.2604\% & 24.7396\% \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{J48 Evaluation}
+J48 correctly classified 567 out of 768 instances, achieving 73.8281\% accuracy. It incorrectly classified 201 instances.
+
+\begin{table}[H]
+\centering
+\small
+\caption{J48 Class-Specific Metrics}
+\label{tab:j48metrics}
+\begin{tabular}{lrrrrrrr}
+\toprule
+\textbf{Class} & \textbf{TP Rate} & \textbf{FP Rate} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{ROC} & \textbf{PRC} \\
+\midrule
+tested\_negative & 0.814 & 0.403 & 0.790 & 0.814 & 0.802 & 0.751 & 0.811 \\
+tested\_positive & 0.597 & 0.186 & 0.632 & 0.597 & 0.614 & 0.751 & 0.572 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\small
+\caption{J48 Confusion Matrix}
+\label{tab:j48cm}
+\begin{tabular}{lrr}
+\toprule
+\textbf{Actual / Predicted} & \textbf{tested\_negative} & \textbf{tested\_positive} \\
+\midrule
+tested\_negative & 407 & 93 \\
+tested\_positive & 108 & 160 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Naive Bayes Evaluation}
+Naive Bayes correctly classified 586 out of 768 instances, achieving 76.3021\% accuracy. It had the highest accuracy of the three tested classifiers and incorrectly classified 182 instances.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Naive Bayes Class-Specific Metrics}
+\label{tab:nbmetrics}
+\begin{tabular}{lrrrrrrr}
+\toprule
+\textbf{Class} & \textbf{TP Rate} & \textbf{FP Rate} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{ROC} & \textbf{PRC} \\
+\midrule
+tested\_negative & 0.844 & 0.388 & 0.802 & 0.844 & 0.823 & 0.818 & 0.891 \\
+tested\_positive & 0.612 & 0.156 & 0.678 & 0.612 & 0.643 & 0.818 & 0.670 \\
+\midrule
+Weighted average & 0.763 & 0.307 & 0.759 & 0.763 & 0.760 & 0.818 & 0.814 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\small
+\caption{Naive Bayes Confusion Matrix}
+\label{tab:nbcm}
+\begin{tabular}{lrr}
+\toprule
+\textbf{Actual / Predicted} & \textbf{tested\_negative} & \textbf{tested\_positive} \\
+\midrule
+tested\_negative & 422 & 78 \\
+tested\_positive & 104 & 164 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{RandomForest Evaluation}
+RandomForest correctly classified 578 out of 768 instances, achieving 75.2604\% accuracy. It incorrectly classified 190 instances.
+
+\begin{table}[H]
+\centering
+\small
+\caption{RandomForest Class-Specific Metrics}
+\label{tab:rfmetrics}
+\begin{tabular}{lrrrrrrr}
+\toprule
+\textbf{Class} & \textbf{TP Rate} & \textbf{FP Rate} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{ROC} & \textbf{PRC} \\
+\midrule
+tested\_negative & 0.834 & 0.399 & 0.796 & 0.834 & 0.814 & 0.816 & 0.889 \\
+tested\_positive & 0.601 & 0.166 & 0.660 & 0.601 & 0.629 & 0.816 & 0.681 \\
+\midrule
+Weighted average & 0.753 & 0.318 & 0.748 & 0.753 & 0.750 & 0.816 & 0.816 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\small
+\caption{RandomForest Confusion Matrix}
+\label{tab:rfcm}
+\begin{tabular}{lrr}
+\toprule
+\textbf{Actual / Predicted} & \textbf{tested\_negative} & \textbf{tested\_positive} \\
+\midrule
+tested\_negative & 417 & 83 \\
+tested\_positive & 107 & 161 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ------------------- SECTION 9 -------------------
+\section{Interpretation and Discussion}
+\subsection{Comparison Across Algorithms}
+\begin{enumerate}
+    \item \textbf{Naive Bayes achieved the highest accuracy:} It correctly classified 586 instances and achieved 76.3021\% accuracy.
+    \item \textbf{RandomForest was the second-best model by accuracy:} It achieved 75.2604\%, which is approximately 1.04 percentage points lower than Naive Bayes.
+    \item \textbf{J48 achieved 73.8281\% accuracy:} It performed slightly below the other two algorithms in this experiment.
+\end{enumerate}
+
+\subsection{Positive-Class Performance}
+For the \texttt{tested\_positive} class, Naive Bayes achieved precision of 0.678, recall of 0.612, and F-measure of 0.643. This means that the model detected 164 of the 268 actual positive-class instances in its confusion matrix. Its positive-class recall is not high enough to support use as a stand-alone medical screening tool.
+
+\subsection{Confusion Matrix Interpretation}
+A confusion matrix compares actual class labels with predicted class labels. Diagonal entries are correct classifications, while off-diagonal entries are errors. For this binary classification task, the matrix helps show how many positive and negative records each model classified correctly or incorrectly.
+
+% ------------------- SECTION 10 -------------------
+\section{Limitations}
+\begin{enumerate}
+    \item \textbf{Dataset limitations:} The dataset has a fixed number of instances and may not represent every population.
+    \item \textbf{Classification errors:} All three models misclassified some records, including records belonging to the tested-positive class.
+    \item \textbf{Preprocessing uncertainty:} The recorded Weka relation mentions Normalize followed by Standardize, but the report should distinguish the filter workflow from the values stored in the original ARFF file.
+    \item \textbf{Evaluation scope:} Stratified 10-fold cross-validation estimates performance on this dataset; it does not establish performance in real clinical settings.
+    \item \textbf{No clinical validity:} These results are for educational comparison and are not evidence that any model can diagnose diabetes reliably.
+\end{enumerate}
+
+% ------------------- SECTION 11 -------------------
+\section{Conclusion and Future Work}
+\subsection{Conclusion}
+This project compared J48, Naive Bayes, and RandomForest classifiers on the Pima Diabetes dataset using Weka and stratified 10-fold cross-validation. The dataset contained 768 instances and 9 attributes, with \texttt{tested\_negative} and \texttt{tested\_positive} as the two class values.
+
+Naive Bayes achieved the highest recorded accuracy of \textbf{76.3021\%}, followed by RandomForest at \textbf{75.2604\%} and J48 at \textbf{73.8281\%}. The comparison illustrates how data mining algorithms can produce different results when applied to the same classification task. However, the remaining classification errors and the positive-class recall values show why accuracy alone is not enough to assess a model.
+
+\subsection{Future Work}
+\begin{enumerate}
+    \item Inspect missing and zero-valued measurements carefully.
+    \item Compare additional classifiers using the same validation protocol.
+    \item Examine precision, recall, F-measure, ROC area, and confusion matrices along with accuracy.
+    \item Validate preprocessing within each training fold if performing a new model evaluation.
+\end{enumerate}
+\textit{This project is educational and does not provide medical recommendations.}
+
+% ------------------- SECTION 12 -------------------
+\section{References}
+\begin{enumerate}
+    \item Frank, E., Hall, M. A., and Witten, I. H. \textit{The WEKA Workbench: Online Appendix for Data Mining: Practical Machine Learning Tools and Techniques}. Morgan Kaufmann.
+    \item Weka Machine Learning Project. \textit{Weka 3: Data Mining Software in Java}. \url{https://www.cs.waikato.ac.nz/ml/weka/}
+    \item Smith, J. W., Everhart, J. E., Dickson, W. C., Knowler, W. C., and Johannes, R. S. (1988). Using the ADAP learning algorithm to forecast the onset of diabetes mellitus. \textit{Proceedings of the Annual Symposium on Computer Application in Medical Care}.
+\end{enumerate}
+
+% ------------------- APPENDIX -------------------
+\section*{Appendix: Project Artifacts}
+\addcontentsline{toc}{section}{Appendix: Project Artifacts}
+The project artifacts for this activity may include:
+\begin{enumerate}
+    \item \texttt{diabetes.arff}: input dataset used in Weka.
+    \item Weka classifier output for J48.
+    \item Weka classifier output for Naive Bayes.
+    \item Weka classifier output for RandomForest.
+    \item Optional preprocessing-check script and CSV export, if used.
+\end{enumerate}
+
+\end{document}
